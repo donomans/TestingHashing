@@ -1,3 +1,16 @@
 ﻿I need a means of checking the spread of various hashing functions.
 
 I'm curious what makes a good hashing algorithm (for fixed and varying sized hash maps).
+
+I need a means of testing:
+	<5k record hash maps
+	>5k <65k  record hash maps
+    >65k++ record hash maps
+    
+
+1) Create arrays of random strings in varying lengths
+2) Feed each array to the hashers and get an output array of hashed values
+3) Calculate distribution
+	-count gaps (places where no values were when there should have been)
+	-count the amount of hash collisions
+	(depending on array size and hash map size they can be the same)
