@@ -91,7 +91,11 @@ namespace TestingHashing
                             })),
                                 0), a, type);
                     });
-               
+                case HashType.RemoteMonModified:
+                    List<Hash> junkstring2hashes = new List<Hash>();
+                    foreach (var a in tohash)
+                        junkstring2hashes.Add(new Hash(UnsafeJunkString2Hash(a), a, type));
+                    return junkstring2hashes;
                 default:
                     return null;
             }
@@ -135,6 +139,29 @@ namespace TestingHashing
                     intPtr += 2;
                 }
                 return (x + (y * 0x214BD12C));
+            }
+        }
+
+        private unsafe Int32 UnsafeJunkString2Hash(Object a)
+        {
+            String s = a.ToString();
+            fixed (Char* str = s.ToCharArray())
+            {
+                Char* chPtr = str;
+                Int32 x = 872777033;
+                Int32 y = x;
+                Int32* intPtr = (Int32*)chPtr;
+                for (Int32 i = s.Length; i > 0; i -= 4)
+                {
+                    x = (((x << 3) + x) + (x >> 0x1B)) ^ intPtr[0];
+                    if (i <= 2)
+                    {
+                        break;
+                    }
+                    y = (((y << 7) + y) + (y >> 0x17)) ^ intPtr[1];
+                    intPtr += 2;
+                }
+                return (x + (y * 558616127));
             }
         }
 
@@ -188,13 +215,26 @@ namespace TestingHashing
 
             for (Int32 count = 0; count < source.Length; count++)
             {
-                Char[] chars = new Char[r.Next(5, 50)];
+                Char[] chars = new Char[r.Next(20, 100)];
                 for (Int16 i = 0; i < chars.Length; i++)
                 {
                     chars[i] = UsableChars[r.Next(0, UsableChars.Length)];
                 }
                 source[count] =  new String(chars);
             }
+        }
+
+        public static void ParallelFillArray(this String[] source, Random r, String UsableChars)
+        {            
+            Parallel.For(0, source.Length, c =>
+            {
+                Char[] chars = new Char[r.Next(5, 50)];
+                for (Int16 i = 0; i < chars.Length; i++)
+                {
+                    chars[i] = UsableChars[r.Next(0, UsableChars.Length)];
+                }
+                source[c] = new String(chars);
+            });
         }
 
         public static Dictionary<T, R> Select<T, R, A>(this IEnumerable<A> source, Action<A, Dictionary<T,R>> transform)
@@ -256,7 +296,7 @@ namespace TestingHashing
         SHA1,
         SHA256,
         SHA512,
-        JunkObject8,
+        RemoteMonModified,
         JunkObject9
     }
 }
