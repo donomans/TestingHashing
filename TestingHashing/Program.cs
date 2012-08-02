@@ -315,15 +315,55 @@ namespace TestingHashing
                 });
             DateTime enddist = DateTime.Now;
 
-            Int32 smallcollisions = smallarraydistribution.Count(d => d.Value > 1);
-            Int32 mediumcollisions = mediumarraydistribution.Count(d => d.Value > 1);
-            Int32 largecollisions = largearraydistribution.Count(d => d.Value > 1);
-            Int32 supercollisions = superarraydistribution.Count(d => d.Value > 1);
+            Int32 smalltotalcollisions = 0, mediumtotalcollisions = 0, largetotalcollisions= 0, supertotalcollisions = 0;
+            Int32 smallcollisions = smallarraydistribution.Count(d =>{
+                if (d.Value > 1)
+                {
+                    smalltotalcollisions += d.Value;
+                    return true;
+                }
+                else
+                    return false;
+            });
+            Int32 mediumcollisions = mediumarraydistribution.Count(d =>
+            {
+                if (d.Value > 1)
+                {
+                    mediumtotalcollisions += d.Value;
+                    return true;
+                }
+                else
+                    return false;
+            });
+            Int32 largecollisions = largearraydistribution.Count(d =>
+            {
+                if (d.Value > 1)
+                {
+                    largetotalcollisions += d.Value;
+                    return true;
+                }
+                else
+                    return false;
+            });
+            Int32 supercollisions = superarraydistribution.Count(d =>
+            {
+                if (d.Value > 1)
+                {
+                    supertotalcollisions += d.Value;
+                    return true;
+                }
+                else
+                    return false;
+            });
             #endregion
             Console.WriteLine("Small Array Collisions: " + smallcollisions);
+            Console.WriteLine("Small Array Total Collisions: " + smalltotalcollisions);
             Console.WriteLine("Medium Array Collisions: " + mediumcollisions);
+            Console.WriteLine("Medium Array Total Collisions: " + mediumtotalcollisions);
             Console.WriteLine("Large Array Collisions: " + largecollisions);
+            Console.WriteLine("Large Array Total Collisions: " + largetotalcollisions);
             Console.WriteLine("Super Array Collisions: " + supercollisions);
+            Console.WriteLine("Super Array Total Collisions: " + supertotalcollisions);
             Console.WriteLine("Total Timer: " + (DateTime.Now - starttime).TotalSeconds);
             Console.WriteLine("Hash Timer: " + (endhash - starthash).TotalSeconds);
             Console.WriteLine("Distribution Timer: " + (enddist - startdist).TotalSeconds);
