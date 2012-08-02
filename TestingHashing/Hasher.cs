@@ -20,7 +20,7 @@ namespace TestingHashing
                         junkstring1hashes.Add(new Hash(UnsafeJunkString1Hash(a), a, type));
                     return junkstring1hashes;
 
-                case HashType.FoundOnline1: ///found in hash table tester app
+                case HashType.FNV: ///found in hash table tester app
                     return tohash.JunkHasher(a =>
                     {
                         String s = a.ToString();
@@ -96,6 +96,7 @@ namespace TestingHashing
                     foreach (var a in tohash)
                         junkstring2hashes.Add(new Hash(UnsafeJunkString2Hash(a), a, type));
                     return junkstring2hashes;
+                
                 default:
                     return null;
             }
@@ -290,13 +291,12 @@ namespace TestingHashing
     {
         None,
         RemoteMon,
-        FoundOnline1,
+        FNV,
         GetHashCode,
         MD5,
         SHA1,
         SHA256,
         SHA512,
-        RemoteMonModified,
-        JunkObject9
+        RemoteMonModified
     }
 }

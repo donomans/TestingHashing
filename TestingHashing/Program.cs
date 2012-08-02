@@ -68,7 +68,7 @@ namespace TestingHashing
             //Console.WriteLine("Fill Single / Threaded Timer: " + (singlethreadedfillend - singlethreadedfillstart).TotalSeconds);
             //Console.WriteLine("Fill Fully Threaded Timer: " + (fullythreadedfillend - fullythreadedfillstart).TotalSeconds);
 
-            RunHash(HashType.FoundOnline1);
+            RunHash(HashType.FNV);
             RunHash(HashType.RemoteMon);
             RunHash(HashType.RemoteMonModified);
             RunHash(HashType.GetHashCode);
