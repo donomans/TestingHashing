@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -9,7 +10,7 @@ namespace TestingHashing
 {
     public class Hasher
     {
-        public IEnumerable<Hash> Hash(Object[] tohash, HashType type)
+        public IEnumerable<Hash> Hash(IEnumerable<Object> tohash, HashType type)
         {
             switch (type)
             {
@@ -97,6 +98,23 @@ namespace TestingHashing
             
         }
 
+        public async Task FillBag(ConcurrentBag<String> source, Int32 length)
+        {
+            Random r = new Random();
+            String UsableChars = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=:"";',./<>?";
+
+            for (Int32 count = 0; count < length; count++)
+            {
+                Char[] chars = new Char[r.Next(5, 50)];
+                for (Int16 i = 0; i < chars.Length; i++)
+                {
+                    chars[i] = UsableChars[r.Next(0, UsableChars.Length)];
+                }
+                source.Add(new String(chars));
+            }
+        }
+
+
         private unsafe Int32 UnsafeJunkString1Hash(Object a)
         {
             String s = a.ToString();
@@ -145,6 +163,24 @@ namespace TestingHashing
                 source[i] = fillarray();
         }
 
+
+
+        public static void FillBag(this ConcurrentBag<String> source, Int32 length)
+        {
+            Random r = new Random();
+            String UsableChars = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=:"";',./<>?";
+
+            for (Int32 count = 0; count < length; count++)
+            {                
+                Char[] chars = new Char[r.Next(5, 50)];
+                for (Int16 i = 0; i < chars.Length; i++)
+                {
+                    chars[i] = UsableChars[r.Next(0, UsableChars.Length)];
+                }
+                source.Add(new String(chars));
+            }
+        }
+
         public static void FillArray(this String[] source)
         {
             Random r = new Random();
@@ -168,6 +204,31 @@ namespace TestingHashing
                 transform(h, dic);
 
             return dic;
+        }
+
+        public static T[][] Select<T, A>(this IEnumerable<A> source, Int32 length, Action<A, T[][]> transform)
+        {
+            T[][] t = new T[length][];
+
+            foreach (var h in source)
+                transform(h, t);
+
+            return t;
+        }
+        public static T[] Find<T>(this IEnumerable<T[]> source, T value, Func<T, Boolean> comparer)
+        {
+            foreach (var t in source)
+                if (comparer(value))
+                    return t;
+
+            return null;
+        }
+
+
+        public static void Map<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            foreach (var item in source)
+                action(item);
         }
     }
 
